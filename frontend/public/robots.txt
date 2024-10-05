@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /admin
+Disallow: /secret
+# CTF{r0b0ts_4r3_fr13nds}

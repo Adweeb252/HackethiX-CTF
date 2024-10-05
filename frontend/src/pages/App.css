@@ -1,0 +1,46 @@
+.App {
+  /* background-color: #3c3c3f; */
+  color: #333;
+  width: 100vw;
+  overflow-x: hidden;
+}
+
+.navbar{
+  background-color: #353738;
+  height: 100px;
+  display: flex;
+  justify-content: space-between;
+  font-size: larger;
+  color: #f2f2f2;
+  padding: 0 20px;
+}
+
+.login{
+  background-color: #565858;
+  border-radius: 30px;
+  height: 60px;
+  margin-top: 20px;
+}
+
+main {
+  padding: 20px;
+}
+
+img{
+  width: 100%;
+}
+
+section {
+  margin-bottom: 10px;
+  padding: 10px 15px;
+  color: #ddd;
+  font-size: 24px;
+}
+
+footer {
+  margin-top: 30px;
+  padding: 10px 20px;
+  background-color: #282c34;
+  color: white;
+  font-size: 20px;
+}
