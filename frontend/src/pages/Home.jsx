@@ -3,15 +3,16 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Content from "../components/Content";
 import "./App.css";
+import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
 function App() {
+  const navigate = useNavigate();
 
   useEffect(() => {
-    document.cookie = "debug_info=Q1RGe2Nvb2tpZV9tb25zdGVyfQ==; path=/; Secure;";
+    document.cookie =
+      "debug_info=Q1RGe2Nvb2tpZV9tb25zdGVyfQ==; path=/; Secure;";
   }, []);
-
-  // see readme to know how to unlock the flag
 
   const notifySuccess = () =>
     toast.success("🎉 Flag Unlocked!! CTF{cl1ck3r_g4m3_pr0}");
@@ -22,20 +23,19 @@ function App() {
 
   setInterval(logFlag, 60000);
 
-  async function callbackend () {
-    const res = await fetch("http://localhost:8000/api/status", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CTF-Flag": "CTF{h34d3r_sp0tt3r}",
-      },
-    });
-    const data = await res.json()
-    console.log(data)
-      
-  }
+  // async function callbackend() {
+  //   const res = await fetch("http://localhost:8000/api/status", {
+  //     method: "GET",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       "X-CTF-Flag": "CTF{h34d3r_sp0tt3r}",
+  //     },
+  //   });
+  //   const data = await res.json();
+  //   console.log(data);
+  // }
 
-  callbackend();
+  // callbackend();
 
   function secretButton() {
     let clicks = 0;
@@ -57,32 +57,53 @@ function App() {
         pauseOnFocusLoss={false}
       />
 
-
       <nav className="navbar">
         <h2>Hackethix CTF Challenge</h2>
-        <button className="login">Login</button>
+        <button
+          className="login"
+          onClick={() => {
+            navigate("/login");
+          }}
+        >
+          Login
+        </button>
       </nav>
 
       <main>
         <section>
           <h1>
-          <ReactTypingEffect
-            text={["Are you ready!!", "Find 10 Flags to win the game!!"]}
-            speed={75}
-            eraseSpeed={50}
-            cursor={"_"}
-          />
+            <ReactTypingEffect
+              text={["Are you ready!!", "Find 10 Flags to win the game!!"]}
+              speed={75}
+              eraseSpeed={50}
+              cursor={"_"}
+            />
           </h1>
-          
+
           <button onClick={secretButton}>Reveal a Flag</button>
         </section>
         <Content />
       </main>
-
-      {/* Add a footer with the "flag" */}
       <footer>
-        <h2>Congrats!! You have found the flag! 🎉</h2>
-        <p>Flag: Flag here</p>
+        <div>
+          <h4>Follow Us</h4>
+          <a href="./Flag" target="_blank">
+            <img src="path-to-facebook-icon.png" alt="Facebook" />
+          </a>
+        </div>
+
+        <div>
+          <h4>Join Our 3-Day Bootcamp</h4>
+          <a
+            href="https://yourwebsite.com/bootcamp"
+          >
+            Click here to learn more and register!
+          </a>
+        </div>
+
+        <div>
+          <p>&copy; 2024 Ticketing Platform. All rights reserved.</p>
+        </div>
       </footer>
     </div>
   );

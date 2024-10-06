@@ -11,7 +11,3 @@ createRoot(document.getElementById('root')).render(
     </BrowserRouter>
   </StrictMode>,
 )
-
-// add flag route
-// login page
-// add more flags 

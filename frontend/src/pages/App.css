@@ -1,25 +1,26 @@
 .App {
-  /* background-color: #3c3c3f; */
+  background-color: #3c3c3f;
   color: #333;
-  width: 100vw;
-  overflow-x: hidden;
+  width: 100%;
 }
 
 .navbar{
-  background-color: #353738;
-  height: 100px;
   display: flex;
   justify-content: space-between;
+  background-color: #353738;
+  height: 80px;
   font-size: larger;
   color: #f2f2f2;
-  padding: 0 20px;
+  padding: 10px 10px 0px 20px;
 }
 
 .login{
   background-color: #565858;
   border-radius: 30px;
-  height: 60px;
-  margin-top: 20px;
+  height: 40px;
+  padding: 10px;
+  font-size: large;
+  color: #ffffff;
 }
 
 main {

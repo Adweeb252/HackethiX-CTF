@@ -1,0 +1,19 @@
+{
+  "title": "Event Details",
+  "date": "2024-10-06",
+  "location": "Virtual",
+  "participants": [
+    {
+      "name": "Alice",
+      "role": "Contestant"
+    },
+    {
+      "name": "Bob",
+      "role": "Judge"
+    }
+  ],
+  "metadata": {
+    "description": "This is a CTF challenge event for testing cybersecurity skills.",
+    "j$0n_h34d3r": "ctf{h1dd3n_1n_pl41n_s1ght}"
+  }
+}
