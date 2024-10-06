@@ -71,7 +71,7 @@ function App() {
 
       <main>
         <section>
-          <h1>
+          <h1 style={{ fontSize: "56px", padding: "10px" }}>
             <ReactTypingEffect
               text={["Are you ready!!", "Find 10 Flags to win the game!!"]}
               speed={75}
@@ -79,6 +79,8 @@ function App() {
               cursor={"_"}
             />
           </h1>
+
+          <img src="ctf.jpeg" alt="" style={{ width: "100%" }} />
 
           <button onClick={secretButton}>Reveal a Flag</button>
         </section>
@@ -88,15 +90,13 @@ function App() {
         <div>
           <h4>Follow Us</h4>
           <a href="./Flag" target="_blank">
-            <img src="path-to-facebook-icon.png" alt="Facebook" />
+            <p>Facebook</p>
           </a>
         </div>
 
         <div>
           <h4>Join Our 3-Day Bootcamp</h4>
-          <a
-            href="https://yourwebsite.com/bootcamp"
-          >
+          <a href="https://yourwebsite.com/bootcamp">
             Click here to learn more and register!
           </a>
         </div>
