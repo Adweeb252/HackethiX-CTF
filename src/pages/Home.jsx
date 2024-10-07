@@ -58,7 +58,26 @@ function App() {
       />
 
       <nav className="navbar">
-        <h2>Hackethix CTF Challenge</h2>
+        <h2 className="text-3xl text-gray-400 font-bold p-3 px-16">Hackethix CTF Challenge</h2>
+        <div className="flex gap-3 p-3">
+        <button
+          className="login"
+          onClick={() => {
+            navigate("/submit");
+          }}
+        >
+          Submit
+        </button>
+
+        <button
+          className="login"
+          onClick={() => {
+            navigate("/leaderboard");
+          }}
+        >
+          Leaderboard
+        </button>
+
         <button
           className="login"
           onClick={() => {
@@ -67,6 +86,7 @@ function App() {
         >
           Login
         </button>
+        </div>
       </nav>
 
       <main>

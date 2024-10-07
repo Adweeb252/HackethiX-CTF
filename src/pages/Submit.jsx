@@ -2,7 +2,7 @@ import EventForm from "../components/EventForm";
 
 function Submit() {
   return (
-    <div className="bg-gray-600">
+    <div className="h-screen w-[100vw]">
       <EventForm />
     </div>
   );
