@@ -77,6 +77,7 @@ function App() {
               speed={75}
               eraseSpeed={50}
               cursor={"_"}
+              className="text-cyan-400 font-bold font-mono italic"
             />
           </h1>
 
@@ -90,7 +91,8 @@ function App() {
         <div>
           <h4>Follow Us</h4>
           <a href="./Flag" target="_blank">
-            <p>Facebook</p>
+            <p>LinkedIn</p>
+            <p>Youtube</p>
           </a>
         </div>
 
