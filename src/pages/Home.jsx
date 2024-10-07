@@ -12,7 +12,7 @@ function App() {
   useEffect(() => {
     document.cookie =
       "debug_info=Q1RGe2Nvb2tpZV9tb25zdGVyfQ==; path=/; Secure;";
-  }, []);
+  },);
 
   const notifySuccess = () =>
     toast.success("🎉 Flag Unlocked!! CTF{cl1ck3r_g4m3_pr0}");
@@ -46,7 +46,7 @@ function App() {
     }
   }
   return (
-    <div className="App">
+    <div className="h-screen w-screen">
       <ToastContainer
         position="top-center"
         autoClose={5000}
