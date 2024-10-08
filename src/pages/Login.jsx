@@ -14,7 +14,7 @@ const LoginPage = () => {
     toast.success("🎉 Flag Unlocked!! CTF{Tangy_Tacos}");
 
   const checkSQL = () => {
-    if (email == "admin" && password == "' OR '1'='1") {
+    if (email == "admin@gmail.com" && password == "' OR '1'='1") {
       notifySuccess();
     } else {
       console.log("No SQL Injection Detected");
