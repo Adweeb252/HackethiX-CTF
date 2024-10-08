@@ -1,9 +1,11 @@
 import { useState, useContext } from "react";
 import Leaderboard from "../pages/Leaderboard";
 import { FormDataContext } from "../Context/formContext";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../../firebaseConfig";
 
 const EventForm = () => {
-  const { setFormData } = useContext(FormDataContext);
+  const { setFormData, resetFormData } = useContext(FormDataContext);
   const [eventId, setEventId] = useState("");
   const [teamName, setTeamName] = useState("");
   const [flag, setFlag] = useState("");
@@ -26,7 +28,7 @@ const EventForm = () => {
   //   setFlags(updatedFlags);
   // };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validFlag = flags.find((f) => f.flag === flag);
 
@@ -38,12 +40,29 @@ const EventForm = () => {
       eventId,
       teamName,
       flag,
+      timestamp: new Date(),
     };
-    setFormData(newFormData); // Store the submitted data
-    setEventId(""); // Clear the form fields after submission
-    setTeamName("");
-    setFlag("");
-    console.log("Form Data Submitted:", newFormData);
+    try {
+      // Add form data to the 'leaderboard' collection in Firestore
+      await addDoc(collection(db, "leaderboard"), newFormData);
+      console.log("Form Data Submitted to Firestore:", newFormData);
+
+      // Reset form fields
+      setFormData(newFormData); // Store the submitted data for local use if needed
+      setEventId("");
+      setTeamName("");
+      setFlag("");
+
+      alert("Submission successful!");
+    } catch (error) {
+      console.error("Error submitting data to Firestore:", error);
+      alert("Failed to submit data. Please try again.");
+    }
+    // setFormData(newFormData); // Store the submitted data
+    // setEventId(""); // Clear the form fields after submission
+    // setTeamName("");
+    // setFlag("");
+    // console.log("Form Data Submitted:", newFormData);
   };
 
   return (

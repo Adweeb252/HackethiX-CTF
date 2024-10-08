@@ -1,6 +1,19 @@
 import LeaderboardComp from "../components/LeaderboardComp";
 import { FormDataContext } from "../Context/formContext";
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
+import {
+  collection,
+  getDocs,
+  addDoc,
+  query,
+  orderBy,
+  onSnapshot,
+  updateDoc,
+  where,
+  doc,
+} from "firebase/firestore";
+import { db } from "../../firebaseConfig";
+
 function Leaderboard() {
   const [flags] = useState([
     { flag: "flag1", score: 100 },
@@ -14,97 +27,158 @@ function Leaderboard() {
     { flag: "flag9", score: 100 },
     { flag: "flag10", score: 100 },
   ]);
-  // const leaderboardData = [
-  //   { id: 1000, name: "Team 1", points: 150 },
-  //   { id: 1001, name: "Team 2", points: 130 },
-  //   { id: 1002, name: "Team 3", points: 130 },
-  //   { id: 1003, name: "Team 4", points: 120 },
-  //   { id: 1004, name: "Team 5", points: 120 },
-  //   { id: 1005, name: "Team 6", points: 120 },
-  // ];
+
   const { formData } = useContext(FormDataContext);
-  const [leaderboard, setLeaderboard] = useState(() => {
-    // Load leaderboard from local storage
-    const storedLeaderboard = localStorage.getItem("leaderboard");
-    return storedLeaderboard ? JSON.parse(storedLeaderboard) : [];
-  });
+  const hasSubmitted = useRef(false);
+  const [leaderboard, setLeaderboard] = useState([]);
   const [startTime] = useState(Date.now());
 
-  // Update local storage whenever the leaderboard changes
-  useEffect(() => {
-    localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
-  }, [leaderboard]);
-
-  // Function to calculate decaying multiplier as time passes
   const getMultiplier = () => {
     const timePassed = Date.now() - startTime;
-    const decayConstant = 0.000256; // You can adjust this constant to make the decay faster/slower
-    return 1 / (1 + decayConstant * timePassed);
+    const decayConstant = 0.000256;
+    const multiplier = 1 / (1 + decayConstant * timePassed);
+    return isNaN(multiplier) ? 1 : multiplier;
   };
+
   useEffect(() => {
-    if (formData) {
-      console.log("Form data received in Leaderboard:", formData);
-      // Add logic here to update the leaderboard with formData
-    } else {
-      console.log("No form data received yet.");
-    }
-    if (formData) {
+    const updateLeaderboard = async () => {
+      if (hasSubmitted.current || !formData) return;
+
+      hasSubmitted.current = true; // Mark as submitted
+
       const { eventId, teamName, flag } = formData;
       const flagIndex = flags.findIndex((f) => f.flag === flag);
+
       if (flagIndex === -1) {
+        console.error("Invalid flag submitted:", flag);
+        hasSubmitted.current = false; // Reset for the next submission
         return;
       }
 
-      const flagScore = flags[flagIndex].score;
+      const flagScore = Number(flags[flagIndex]?.score ?? 0);
+      if (isNaN(flagScore)) {
+        console.error("Invalid flagScore:", flagScore);
+        hasSubmitted.current = false; // Reset for the next submission
+        return;
+      }
+
       const multiplier = getMultiplier();
 
-      setLeaderboard((prev) => {
-        const teamIndex = prev.findIndex((t) => t.teamName === teamName);
+      // Query Firestore to check if the team already exists
+      const leaderboardRef = collection(db, "leaderboard");
+      const teamQuery = query(
+        leaderboardRef,
+        // where("eventId", "==", eventId),
+        where("teamName", "==", teamName)
+      );
+      const querySnapshot = await getDocs(teamQuery);
+      console.log(querySnapshot.empty);
+      console.log(querySnapshot.docs[0].id);
 
-        if (teamIndex >= 0) {
-          // Team already exists
-          const team = prev[teamIndex];
+      let teamExists = false;
+      let teamDocId = null;
 
-          // Check if the flag has already been submitted
-          if (team.flagsSubmitted[flagIndex].submitted) {
-            return prev; // Don't update the leaderboard
-          }
-          // Update team score and mark flag as submitted
-          team.score += flagScore * multiplier;
-          team.flagsFound += 1;
-          team.flagsSubmitted[flagIndex] = {
-            submitted: true,
-            submissionTime: Date.now(), // Mark submission time
-          };
-        } else {
-          // New team, add them to the leaderboard
-          const newTeam = {
-            eventId,
-            teamName,
-            score: flagScore * multiplier,
-            flagsFound: 1,
-            flagsSubmitted: Array(flags.length).fill({
-              submitted: false,
-              submissionTime: null,
-            }),
-          };
-          newTeam.flagsSubmitted[flagIndex] = {
-            submitted: true,
-            submissionTime: Date.now(), // Mark submission time
-          };
-          prev.push(newTeam);
+      if (!querySnapshot.empty) {
+        teamExists = true;
+        const teamDoc = querySnapshot.docs[0];
+        teamDocId = teamDoc.id;
+        const teamData = teamDoc.data();
+
+        // If flagsSubmitted is not an array, initialize it
+        if (!Array.isArray(teamData.flagsSubmitted)) {
+          console.warn(
+            `flagsSubmitted is not an array for team: ${teamName}, initializing it...`
+          );
+          teamData.flagsSubmitted = Array(flags.length).fill({
+            submitted: false,
+            submissionTime: null,
+          });
         }
 
-        // Sort leaderboard by score, then by flags found
-        return [...prev].sort((a, b) => {
-          if (b.score === a.score) {
-            return b.flagsFound - a.flagsFound;
-          }
-          return b.score - a.score;
+        // Check if the flag has already been submitted
+        if (teamData.flagsSubmitted[flagIndex]?.submitted) {
+          console.warn("Flag already submitted for team:", teamName);
+          hasSubmitted.current = false; // Reset for the next submission
+          return; // Prevent duplicate flag submission
+        }
+
+        // Update the team score and flag submission status
+        const currentScore = Number(teamData.score ?? 0);
+        teamData.score = currentScore + flagScore * multiplier;
+        teamData.flagsFound = (teamData.flagsFound || 0) + 1;
+
+        // Ensure flagsSubmitted array is correctly initialized and updated
+        teamData.flagsSubmitted[flagIndex] = {
+          submitted: true,
+          submissionTime: Date.now(),
+        };
+
+        // Update team in Firestore
+        const teamDocRef = doc(db, "leaderboard", teamDocId);
+        await updateDoc(teamDocRef, {
+          score: teamData.score,
+          flagsFound: teamData.flagsFound,
+          flagsSubmitted: teamData.flagsSubmitted,
         });
-      });
-    }
-  }, [formData]);
+
+        console.log("Team updated successfully:", teamData);
+      }
+
+      // If the team doesn't exist, add them
+      if (!teamExists) {
+        const newTeam = {
+          eventId,
+          teamName,
+          score: flagScore * multiplier,
+          flagsFound: 1,
+          flagsSubmitted: Array(flags.length).fill({
+            submitted: false,
+            submissionTime: null,
+          }),
+        };
+
+        // Initialize flagsSubmitted for the new team
+        newTeam.flagsSubmitted[flagIndex] = {
+          submitted: true,
+          submissionTime: Date.now(),
+        };
+
+        await addDoc(leaderboardRef, newTeam);
+        console.log("New team added successfully:", newTeam);
+      }
+
+      // Reset hasSubmitted for the next submission
+      hasSubmitted.current = false;
+    };
+
+    updateLeaderboard().catch((error) => {
+      console.error("Error updating leaderboard:", error);
+      hasSubmitted.current = false;
+    });
+  }, [formData, flags]);
+
+  useEffect(() => {
+    const leaderboardRef = collection(db, "leaderboard");
+    const q = query(leaderboardRef, orderBy("score", "desc"));
+
+    const unsubscribe = onSnapshot(
+      q,
+      (snapshot) => {
+        const leaderboardData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setLeaderboard(leaderboardData);
+        console.log("Leaderboard updated:", leaderboardData);
+      },
+      (error) => {
+        console.error("Error fetching leaderboard data:", error);
+      }
+    );
+
+    return () => unsubscribe();
+  }, []);
+
   return (
     <div className="h-[100vh] w-[100vw] bg-gray-600">
       <LeaderboardComp data={leaderboard} />
