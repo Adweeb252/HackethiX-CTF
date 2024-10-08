@@ -4,21 +4,22 @@ import "react-toastify/dist/ReactToastify.css";
 import Content from "../components/Content";
 import "./App.css";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 function App() {
   const navigate = useNavigate();
+  const [clicks, setClicks] = useState(0);
 
   useEffect(() => {
     document.cookie =
-      "debug_info=Q1RGe2Nvb2tpZV9tb25zdGVyfQ==; path=/;";
+      "debug_info=Q1RGe1BlcHBlcm9uaV9Qb3B9; path=/;";
   },);
 
   const notifySuccess = () =>
-    toast.success("🎉 Flag Unlocked!! CTF{cl1ck3r_g4m3_pr0}");
+    toast.success("🎉 Flag Unlocked!! CTF{Cheesy_Nachos}");
 
   function logFlag() {
-    console.log("Looking for flags? CTF{c0ns0l3_l0gg3r}");
+    console.log("Looking for flags? CTF{Crispy_Crust}");
   }
 
   setInterval(logFlag, 60000);
@@ -37,14 +38,15 @@ function App() {
 
   // callbackend();
 
-  function secretButton() {
-    let clicks = 0;
-    clicks++;
-    if (clicks === 1) {
+  const secretButton = () => {
+    // Increment the clicks state by 1
+    setClicks(prevClicks => prevClicks + 1);
+
+    // Check if clicks have reached or exceeded 20
+    if (clicks + 1 >= 20) {
       notifySuccess();
-      // console.log("Flag Unlocked!! CTF{cl1ck3r_g4m3_pr0}");
     }
-  }
+  };
   return (
     <div className="h-screen w-screen">
       <ToastContainer
@@ -103,7 +105,7 @@ function App() {
 
           <img src="ctf.jpeg" alt="" style={{ width: "100%" }} />
 
-          <button onClick={secretButton}>Reveal a Flag</button>
+          <button onClick={secretButton}>WELCOME PLAYER,</button>
         </section>
         <Content />
       </main>
@@ -124,7 +126,7 @@ function App() {
         </div>
 
         <div>
-          <p>&copy; 2024 Ticketing Platform. All rights reserved.</p>
+          <p>&copy; 2024 Hackethix Platform. All rights reserved. CTF&#123;Spicy_Salsa&#125;</p>
         </div>
       </footer>
     </div>

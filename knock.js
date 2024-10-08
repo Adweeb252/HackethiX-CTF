@@ -5,7 +5,7 @@ const setupFlagServer = () => {
         connection.on('data', (data) => {
             const message = data.toString().trim();
             if (message === 'KNOCK_KNOCK') {
-                connection.write('CTF{p0rt_kn0ck3r_m4st3r}\n');
+                connection.write('CTF{Nutty_Nibbles}\n');
             } else {
                 connection.write('Try again!\n');
             }

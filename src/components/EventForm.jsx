@@ -9,16 +9,16 @@ const EventForm = () => {
   const [teamName, setTeamName] = useState("");
   const [flag, setFlag] = useState("");
   const flags = [
-    { flag: "flag1", score: 100 },
-    { flag: "flag2", score: 100 },
-    { flag: "flag3", score: 100 },
-    { flag: "flag4", score: 100 },
-    { flag: "flag5", score: 100 },
-    { flag: "flag6", score: 100 },
-    { flag: "flag7", score: 100 },
-    { flag: "flag8", score: 100 },
-    { flag: "flag9", score: 100 },
-    { flag: "flag10", score: 300 },
+    { flag: "Spicy_Salsa", score: 100 }, //footer
+    { flag: "Cheesy_Nachos", score: 100 }, //interactive button
+    { flag: "Choco_Delight", score: 100 }, //HTML comment in main page source Setup: Hidden comment in source code
+    { flag: "Berry_Bliss", score: 100 }, //robos.txt
+    { flag: "Savory_Surprise", score: 100 }, // ip/flag
+    { flag: "Pepperoni_Pop", score: 100 }, //cookie base64
+    { flag: "Crispy_Crust", score: 100 }, //Console Message
+    { flag: "Tangy_Tacos", score: 100 }, //sql
+    { flag: "Fruity_Fiesta", score: 100 }, //error page
+    { flag: "Nutty_Nibbles", score: 300 }, //knock knock
   ];
 
   const getMultiplier = async () => {

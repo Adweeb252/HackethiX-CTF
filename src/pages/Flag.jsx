@@ -16,7 +16,7 @@ const Flag = () => {
     metadata: {
       description:
         "This is a CTF challenge event for testing cybersecurity skills.",
-      j$0n_h34d3r: "ctf{h1dd3n_1n_pl41n_s1ght}",
+      j$0n_h34d3r: "ctf{Savory_Surprise}",
     },
   };
   // const api = "CTF{h1dd3n_1n_pl41n_s1ght}";

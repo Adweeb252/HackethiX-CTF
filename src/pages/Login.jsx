@@ -11,7 +11,7 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   const notifySuccess = () =>
-    toast.success("🎉 Flag Unlocked!! CTF{sql_b4s1cs_101}");
+    toast.success("🎉 Flag Unlocked!! CTF{Tangy_Tacos}");
 
   const checkSQL = () => {
     if (email == "admin" && password == "admin") {
