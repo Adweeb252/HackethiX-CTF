@@ -112,19 +112,16 @@ function App() {
       <footer>
         <div>
           <h4>Follow Us</h4>
-          <a href="./Flag" target="_blank">
+          <a href="https://linktr.ee/nsut.hackethix" target="_blank">
             <p>LinkedIn</p>
             <p>Youtube</p>
           </a>
         </div>
-
         <div>
-          <h4>Join Our 3-Day Bootcamp</h4>
-          <a href="https://yourwebsite.com/bootcamp">
-            Click here to learn more and register!
-          </a>
+          
+          <a href="https://www.youtube.com/watch?v=3nz_F9Of9Uo&list=PL6mdr-ubH9l7qmfk_IuL7jV3scj_cHc1p">
+          <h4>Join Our 3-Day Bootcamp</h4></a>
         </div>
-
         <div>
           <p>&copy; 2024 Hackethix Platform. All rights reserved. CTF&#123;Spicy_Salsa&#125;</p>
         </div>
