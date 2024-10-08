@@ -11,7 +11,7 @@ function App() {
 
   useEffect(() => {
     document.cookie =
-      "debug_info=Q1RGe2Nvb2tpZV9tb25zdGVyfQ==; path=/; Secure;";
+      "debug_info=Q1RGe2Nvb2tpZV9tb25zdGVyfQ==; path=/;";
   },);
 
   const notifySuccess = () =>

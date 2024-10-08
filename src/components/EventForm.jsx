@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 import { FormDataContext } from "../Context/formContext";
-import { collection, getDocs, addDoc, updateDoc, query, where, doc } from "firebase/firestore";
+import { getFirestore,setDoc,collection, getDocs,getDoc, addDoc, updateDoc, query, where, doc } from "firebase/firestore";
 import { db } from "../../firebaseConfig";
 
 const EventForm = () => {
@@ -21,18 +21,38 @@ const EventForm = () => {
     { flag: "flag10", score: 300 },
   ];
 
-  const getMultiplier = () => {
-    const startTime = 1728395989794; // Assuming this is the event start time.
-    const timePassed = Date.now() - startTime; // Time passed in milliseconds.
-    
-    const maxMultiplier = 1;      // Starting multiplier.
-    const decayRate = 0.0000001;    // The rate at which the multiplier decreases.
-    
-    // Linear decay: subtract timePassed multiplied by decayRate from the maxMultiplier.
-    const multiplier = maxMultiplier - decayRate * timePassed;
-    
-    // Ensure multiplier doesn't go below zero.
-    return Math.max(multiplier, 0.000001);
+  const getMultiplier = async () => {
+    const db = getFirestore();
+    const docRef = doc(db, "multiplierData", "timestamp");
+  
+    // Attempt to fetch the start timestamp from Firestore
+    const docSnapshot = await getDoc(docRef);
+    let startTime;
+  
+    // Debugging logs
+    console.log('Document Snapshot Exists:', docSnapshot.exists());
+  
+    // If the document exists, fetch the start timestamp
+    if (docSnapshot.exists()) {
+      startTime = docSnapshot.data().startTimestamp;
+      console.log('Fetched start timestamp:', startTime);
+    } else {
+      // If it doesn't exist, set the current time as start timestamp
+      startTime = Date.now(); // Current time in milliseconds
+      await setDoc(docRef, { startTimestamp: startTime });
+      console.log('No document found. Set start timestamp to:', startTime);
+    }
+  
+    // Calculate the time passed and the multiplier
+    const timePassed = Date.now() - startTime;
+    const maxMultiplier = 1.0; // Starting multiplier
+    const decayRate = 0.0000001; // The rate at which the multiplier decreases
+  
+    // Calculate the multiplier with linear decay
+    let multiplier = maxMultiplier - decayRate * timePassed;
+  
+    // Ensure the multiplier does not go below a minimum value
+    return multiplier > 0 ? multiplier : 0.000001; // Ensures multiplier is at least 0.000001
   };
   
 
@@ -47,7 +67,7 @@ const EventForm = () => {
 
     const flagIndex = flags.findIndex((f) => f.flag === flag);
     const flagScore = validFlag.score;
-    const multiplier = getMultiplier();
+    const multiplier = await getMultiplier();
 
     try {
       const leaderboardRef = collection(db, "leaderboard");
